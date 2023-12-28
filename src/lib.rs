@@ -1,5 +1,8 @@
+use std::str::FromStr;
+
 use gloo::console::log;
 use serde::{Deserialize, Serialize};
+use stylist::{yew::styled_component, Style, StyleSource};
 use yew::prelude::*;
 
 #[derive(Serialize, Deserialize)]
@@ -8,7 +11,9 @@ struct MyObject {
     favorite_language: String,
 }
 
-#[function_component(App)]
+const STYLE_FILE: &str = include_str!("./main.css");
+
+#[styled_component(App)]
 pub fn app() -> Html {
     let name = "Bob";
     let my_object = MyObject {
@@ -24,14 +29,22 @@ pub fn app() -> Html {
 
     let items = (1..=5).collect::<Vec<i32>>();
 
+    // let stylesheet = style!(
+    //     r#"
+    //         color: red;
+    //         font-size: 48px;
+    // "#
+    // )
+    // .unwrap();
+
+    let css = StyleSource::from_str(STYLE_FILE).unwrap();
+
+    let stylesheet = Style::new(css).unwrap();
+
     html! {
-        <div>
-            <h1 class={class}>{ "Hello World!!" }</h1>
-            if class == "my-title" {
-                <p>{ "This is my first Yew app!" }</p>
-            } else {
-                <p>{ "This is not my first Yew app!" }</p>
-            }
+        <div class={stylesheet}>
+            <h1>{ "Hello World!!" }</h1>
+            <p class={css!("color: orange;")}>{ "This is my first Yew app!" }</p>
 
             if let Some(msg) = message {
                 <p>{ msg }</p>
