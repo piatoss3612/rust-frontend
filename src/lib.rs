@@ -1,6 +1,6 @@
 pub mod components;
 use components::atoms::main_title::{Color, MainTitle};
-
+use components::molecules::form::Form;
 use std::str::FromStr;
 
 use gloo::console::log;
@@ -58,6 +58,8 @@ pub fn app() -> Html {
             }
 
             { list_to_html(items) }
+
+            <Form />
         </div>
     }
 }
