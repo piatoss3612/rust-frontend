@@ -44,9 +44,13 @@ pub fn app() -> Html {
 
     let stylesheet = Style::new(css).unwrap();
 
+    let main_title_load: Callback<String> = Callback::from(|message: String| {
+        log!("MainTitle loaded with message:", message);
+    });
+
     html! {
         <div class={stylesheet}>
-            <MainTitle title="Hello World123!!" color={Color::Error} />
+            <MainTitle title="Hello World123!!" color={Color::Error} on_load={main_title_load} />
             <p class={css!("color: orange;")}>{ "This is my first Yew app!" }</p>
 
             if let Some(msg) = message {
