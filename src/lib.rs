@@ -1,3 +1,6 @@
+pub mod components;
+use components::atoms::main_title::{Color, MainTitle};
+
 use std::str::FromStr;
 
 use gloo::console::log;
@@ -43,7 +46,7 @@ pub fn app() -> Html {
 
     html! {
         <div class={stylesheet}>
-            <h1>{ "Hello World!!" }</h1>
+            <MainTitle title="Hello World123!!" color={Color::Error} />
             <p class={css!("color: orange;")}>{ "This is my first Yew app!" }</p>
 
             if let Some(msg) = message {
