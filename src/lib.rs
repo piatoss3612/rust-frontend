@@ -1,6 +1,6 @@
 pub mod components;
 use components::atoms::main_title::{Color, MainTitle};
-use components::molecules::form::Form;
+use components::molecules::form::{Data, Form};
 use std::str::FromStr;
 
 use gloo::console::log;
@@ -48,6 +48,11 @@ pub fn app() -> Html {
         log!("MainTitle loaded with message:", message);
     });
 
+    let onsubmit = Callback::from(move |data: Data| {
+        log!("Username:", data.username);
+        log!("Favorite language:", data.favorite_language);
+    });
+
     html! {
         <div class={stylesheet}>
             <MainTitle title="Hello World123!!" color={Color::Error} on_load={main_title_load} />
@@ -59,7 +64,7 @@ pub fn app() -> Html {
 
             { list_to_html(items) }
 
-            <Form />
+            <Form onsubmit={onsubmit} />
         </div>
     }
 }
