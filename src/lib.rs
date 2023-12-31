@@ -1,12 +1,14 @@
 pub mod components;
 use components::atoms::main_title::{Color, MainTitle};
 use components::molecules::form::{Data, Form};
+use std::ops::Deref;
 use std::str::FromStr;
 
 use gloo::console::log;
 use serde::{Deserialize, Serialize};
 use stylist::{yew::styled_component, Style, StyleSource};
 use yew::prelude::*;
+use yew::ContextProvider;
 
 #[derive(Serialize, Deserialize)]
 struct MyObject {
@@ -15,6 +17,12 @@ struct MyObject {
 }
 
 const STYLE_FILE: &str = include_str!("./main.css");
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct User {
+    pub username: String,
+    pub favorite_language: String,
+}
 
 #[styled_component(App)]
 pub fn app() -> Html {
@@ -48,13 +56,23 @@ pub fn app() -> Html {
         log!("MainTitle loaded with message:", message);
     });
 
-    let onsubmit = Callback::from(move |data: Data| {
-        log!("Username:", data.username);
-        log!("Favorite language:", data.favorite_language);
-    });
+    let user_state = use_state(|| User::default());
+
+    let onsubmit = {
+        let user_state = user_state.clone();
+
+        Callback::from(move |data: Data| {
+            let mut user = user_state.deref().clone();
+
+            user.username = data.username;
+            user.favorite_language = data.favorite_language;
+
+            user_state.set(user);
+        })
+    };
 
     html! {
-        <div class={stylesheet}>
+        <ContextProvider<User> context={user_state.deref().clone()}>
             <MainTitle title="Hello World123!!" color={Color::Error} on_load={main_title_load} />
             <p class={css!("color: orange;")}>{ "This is my first Yew app!" }</p>
 
@@ -65,7 +83,7 @@ pub fn app() -> Html {
             { list_to_html(items) }
 
             <Form onsubmit={onsubmit} />
-        </div>
+        </ContextProvider<User>>
     }
 }
 

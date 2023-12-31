@@ -2,6 +2,7 @@ use std::ops::Deref;
 
 use crate::components::atoms::custom_button::CustomButton;
 use crate::components::atoms::text_input::TextInput;
+use crate::User;
 use yew::prelude::*;
 
 #[derive(Default, Debug, Clone)]
@@ -18,6 +19,7 @@ pub struct Props {
 #[function_component(Form)]
 pub fn form(props: &Props) -> Html {
     let state = use_state(|| Data::default());
+    let user_context = use_context::<User>();
 
     let cloned_state = state.clone();
     let username_changed = Callback::from(move |username: String| {
@@ -50,6 +52,8 @@ pub fn form(props: &Props) -> Html {
             <CustomButton label="Submit"/>
             <p>{ &state.username} </p>
             <p>{ &state.favorite_language} </p>
+            <p>{ user_context.clone().unwrap_or_default().username} </p>
+            <p>{ user_context.unwrap_or_default().favorite_language} </p>
         </form>
     )
 }
