@@ -71,6 +71,31 @@ pub fn app() -> Html {
         })
     };
 
+    let first_load = use_state(|| true);
+
+    /*
+        1. first_load = true
+        2. 'App component created' is logged
+        3. first_load = false
+        4. 'App component dropped' is logged
+        5. 'App component updated' is logged
+    */
+    use_effect_with(*first_load, move |_| {
+        if *first_load {
+            // this code will run on component creation
+            log!("App component created");
+            first_load.set(false);
+        } else {
+            // this code will run on every update
+            log!("App component updated");
+        }
+
+        || {
+            // this code will run when the component is dropped
+            log!("App component dropped");
+        }
+    });
+
     html! {
         <ContextProvider<User> context={user_state.deref().clone()}>
             <MainTitle title="Hello World123!!" color={Color::Error} on_load={main_title_load} />
