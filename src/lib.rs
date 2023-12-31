@@ -1,4 +1,5 @@
 pub mod components;
+mod router;
 use components::atoms::main_title::{Color, MainTitle};
 use components::molecules::form::{Data, Form};
 use std::ops::Deref;
@@ -9,6 +10,9 @@ use serde::{Deserialize, Serialize};
 use stylist::{yew::styled_component, Style, StyleSource};
 use yew::prelude::*;
 use yew::ContextProvider;
+use yew_router::prelude::*;
+
+use crate::router::{switch, Route};
 
 #[derive(Serialize, Deserialize)]
 struct MyObject {
@@ -108,6 +112,10 @@ pub fn app() -> Html {
             { list_to_html(items) }
 
             <Form onsubmit={onsubmit} />
+
+            <BrowserRouter>
+                <Switch<Route> render={switch} />
+            </BrowserRouter>
         </ContextProvider<User>>
     }
 }
