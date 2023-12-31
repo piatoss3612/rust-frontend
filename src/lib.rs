@@ -13,6 +13,7 @@ use yew::ContextProvider;
 use yew_router::prelude::*;
 
 use crate::router::{switch, Route};
+use components::atoms::struct_hello::StructHello;
 
 #[derive(Serialize, Deserialize)]
 struct MyObject {
@@ -116,6 +117,9 @@ pub fn app() -> Html {
             <BrowserRouter>
                 <Switch<Route> render={switch} />
             </BrowserRouter>
+
+            <StructHello message="Hello World!!!" />
+            <components::molecules::struct_counter::StructCounter />
         </ContextProvider<User>>
     }
 }
